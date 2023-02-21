@@ -2,8 +2,8 @@
   <div class="default" :style="{background: theme.bg}">
     <div class="default-menu">
       <div class="menus" :style="{width: menusWidth}">
-        <open-menus v-show="isOpen" :list="menusData" @close="onCloseMenus" style="transition: .5s" @click="onMenuItemClick"/>
-        <menus @open="onOpenMenus" @click="onMenuItemClick" v-show="!isOpen" style="margin-left: 10px;line-height: 30px;transition: .5s" width="60px" :list="menusData">
+        <open-menus v-show="system.menuIsOpen" :list="menusData" @close="onCloseMenus" style="transition: .5s" @click="onMenuItemClick"/>
+        <menus @open="onOpenMenus" @click="onMenuItemClick" v-show="!system.menuIsOpen" style="margin-left: 10px;line-height: 30px;transition: .5s" width="60px" :list="menusData">
             <span style="font-size: 13px;font-weight: bold" :style="{color: theme.color}">菜单</span>
         </menus>
       </div>
@@ -54,7 +54,7 @@ export default {
     ipcRenderer.on('windows-resize', (event, params)=>{
       this.system.isMax = params
     })
-    this.menusWidth = this.isOpen ? '500px' : '150px'
+    this.menusWidth = this.system.menuIsOpen ? '500px' : '150px'
     this.menusData = [...menusDate ]
   },
   methods: {
@@ -85,7 +85,9 @@ export default {
       if(value === 'theme-white') {
         this.$store.state.theme = {
           bg: 'white',
-          color: "#333"
+          color: "#333",
+          menuBg: '#78909C88',
+          menuColor: 'white'
         }
       }
       if(value === 'custom-theme') {
@@ -97,11 +99,13 @@ export default {
       console.log('on minus')
     },
     onOpenMenus(){
-      this.isOpen = true
+      this.system.menuIsOpen = true
+      this.$appStore.set('system.menuIsOpen', this.system.menuIsOpen)
       this.menusWidth = this.menusData.length * 50 + 30 + 'px'
     },
     onCloseMenus(){
-      this.isOpen = false
+      this.system.menuIsOpen = false
+      this.$appStore.set('system.menuIsOpen', this.system.menuIsOpen)
       this.menusWidth = '150px'
     }
   }

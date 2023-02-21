@@ -17,6 +17,7 @@
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid #cccccc55;
+    user-select: none;
 
     .menus{
       height: 100%;

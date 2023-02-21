@@ -27,6 +27,7 @@ export default {
     ...mapState(['system', 'theme'])
   },
   created() {
+
   }
 }
 
