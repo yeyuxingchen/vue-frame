@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 Vue.use(VueRouter)
 
@@ -8,16 +7,13 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: () => import(/* webpackChunkName: "about" */ '../views/main/index.vue')
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    path: '/file-create',
+    name: 'file_create',
+    component: () => import(/* webpackChunkName: "about" */ '../views/file/index.vue')
+  },
 ]
 
 const router = new VueRouter({
@@ -25,5 +21,15 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+let originPush =  VueRouter.prototype.push;  //备份原push方法
+
+VueRouter.prototype.push = function (location, resolve, reject){
+  if (resolve && reject) {    //如果传了回调函数，直接使用
+    originPush.call(this, location, resolve, reject);
+  }else {                     //如果没有传回调函数，手动添加
+    originPush.call(this, location, ()=>{}, ()=>{});
+  }
+}
 
 export default router
