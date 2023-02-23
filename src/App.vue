@@ -26,6 +26,9 @@ export default {
   computed: {
     ...mapState(['system', 'theme'])
   },
+  mounted() {
+    this.$router.push('/')
+  },
   created() {
 
   }
@@ -35,7 +38,6 @@ export default {
 
 <style lang="scss">
 @import "@/assets/app.scss";
-@import "@/assets/icon/iconfont.css";
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -2,10 +2,11 @@ import Vue from 'vue'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import App from './App.vue'
-import './registerServiceWorker'
+// import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import vClickOutside from 'v-click-outside'
+import "./assets/icon/iconfont.css";
 
 import { appStore, userStore } from '@/utils/appStore'
 

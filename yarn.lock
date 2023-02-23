@@ -1437,6 +1437,11 @@
   resolved "https://registry.npmmirror.com/@types/node/-/node-12.20.55.tgz#c329cbd434c42164f846b909bd6f85b5537f6240"
   integrity sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==
 
+"@types/node@^16.4.7":
+  version "16.18.12"
+  resolved "https://registry.npmmirror.com/@types/node/-/node-16.18.12.tgz#e3bfea80e31523fde4292a6118f19ffa24fd6f65"
+  integrity sha512-vzLe5NaNMjIE3mcddFVGlAXN1LEWueUsMsOJWaT6wWMJGyljHAWHznqfnKUQWGzu7TLPrGvWdNAsvQYW+C0xtw==
+
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
   resolved "https://registry.npmmirror.com/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
@@ -4964,6 +4969,13 @@ get-value@^2.0.3, get-value@^2.0.6:
   version "2.0.6"
   resolved "https://registry.npmmirror.com/get-value/-/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha512-Ln0UQDlxH1BapMu3GPtf7CuYNwRZf2gwCuPqbyG6pB8WfmFpzqcy4xtAaAMUhnNqjMKTiCPZG2oMT3YSx8U2NA==
+
+getmac@^5.20.0:
+  version "5.20.0"
+  resolved "https://registry.npmmirror.com/getmac/-/getmac-5.20.0.tgz#d549e69da95393084ede7881b9996f94d89e34df"
+  integrity sha512-O9T855fb+Hx9dsTJHNv72ZUuA6Y18+BO/0ypPXf6s/tunzXqhc3kbQkNAl+9HVKVlwkWmglHS4LMoJ9YbymKYQ==
+  dependencies:
+    "@types/node" "^16.4.7"
 
 getpass@^0.1.1:
   version "0.1.7"

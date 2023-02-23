@@ -1,14 +1,15 @@
 <template>
   <div style="float:left">
     <div style="width: 100px;height: 100px">
-      <el-button v-text="'打印'" type="success" @click="getData" />
-      <el-image :src="'https://localhost:13531/20230221_170519_011_10.jpg'" style="width: calc(630px / 2);height: calc(790px / 2)"  />
-      <image style="width: 100px;height: 100px" href="https://localhost:13531/20230221_170519_011_10.jpg" />
+      <el-button size="mini" style="border-radius: 0" v-text="'打印'" type="primary" @click="getData" />
+      <el-image v-if="url" :src="url" style="width: calc(630px / 2);height: calc(790px / 2)"  />
     </div>
   </div>
 </template>
 
 <script>
+
+import {de, en, getMacString} from "@/utils/tools";
 
 export default {
   name: "index",
@@ -18,14 +19,15 @@ export default {
     url: ''
   }),
   created() {
-    // setInterval(() => {
-    //   this.$notify.success({})
-    // }, 500)
+    const mac = getMacString()
+    console.log(mac)
     this.onWebSocket()
   },
   methods: {
+    getUniqueDate(){
+      return (Math.ceil(new Date().getTime() / 10) / 100000000).toString().split('.')[1]
+    },
     onWebSocket(){
-        const url = "ws://localhost:13528";
         if (this.socket) {
           return
         }
@@ -37,7 +39,8 @@ export default {
         // 打开Socket
         that.socket.onopen = function(event)
         {
-          console.log('socket 链接成功')
+          console.log('socket 链接成功 获取打印机列表 --- ')
+          that.getPrinters()
           // 监听消息
           that.socket.onmessage = function(event)
           {
@@ -53,7 +56,10 @@ export default {
                 url = data.previewImage[0];
               }
               console.log('获取到链接 --- ', url)
-              this.url = url
+              that.url = url
+            }
+            if(data.cmd === 'getPrinters'){
+              console.log(data)
             }
           };
           // 监听Socket的关闭
@@ -63,9 +69,12 @@ export default {
           };
         };
     },
-    dateChange(){
-      new Date().toUTCString()
-      console.log(this.value1.toISOString())
+    getPrinters(){
+      const request = {};
+      request.requestID=this.getUUID(8, 16);
+      request.version="1.0";
+      request.cmd='getPrinters';
+      this.socket.send(JSON.stringify(request))
     },
     getData(){
       const data = {
@@ -73,7 +82,7 @@ export default {
         "version": "1.0",
         "cmd": "print",
         "task": {
-          "taskID": "78698509",
+          "taskID": this.getUniqueDate(),
           "preview": true,
           "previewType": "image",
           "printer": "Fax",
@@ -119,7 +128,34 @@ export default {
         }
       }
       this.socket.send(JSON.stringify(data))
-    }
+    },
+    /***
+     *
+     * 获取请求的UUID，指定长度和进制,如
+     * getUUID(8, 2)   //"01001010" 8 character (base=2)
+     * getUUID(8, 10) // "47473046" 8 character ID (base=10)
+     * getUUID(8, 16) // "098F4D35"。 8 character ID (base=16)
+     *
+     */
+    getUUID(len, radix) {
+      const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+      let uuid = [], i;
+      radix = radix || chars.length;
+      if (len) {
+        for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random()*radix];
+      } else {
+        let r;
+        uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+        uuid[14] = '4';
+        for (i = 0; i < 36; i++) {
+          if (!uuid[i]) {
+            r = 0 | Math.random()*16;
+            uuid[i] = chars[(i === 19) ? (r & 0x3) | 0x8 : r];
+          }
+        }
+  }
+  return uuid.join('');
+}
   }
 }
 </script>
