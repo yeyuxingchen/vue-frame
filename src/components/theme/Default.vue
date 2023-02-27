@@ -1,6 +1,6 @@
 <template>
   <div class="default" :style="{background: theme.bg}">
-    <div class="default-menu">
+    <div class="default-menu" :style="{background: theme.topBg}">
       <div class="menus" :style="{width: menusWidth}">
         <open-menus v-show="system.menuIsOpen" :list="menusData" @close="onCloseMenus" style="transition: .5s" @click="onMenuItemClick"/>
         <menus @open="onOpenMenus" @click="onMenuItemClick" v-show="!system.menuIsOpen" style="margin-left: 10px;line-height: 30px;transition: .5s" width="60px" :list="menusData">
@@ -83,12 +83,16 @@ export default {
       if (value === 'file-create') {
         this.$router.push({path: '/file-create'})
       }
+      if (value === 'printer-preview') {
+        this.$router.push({path: '/'})
+      }
       if (value === 'theme-black') {
         this.$store.state.theme = {
-          bg: '#333',
+          bg: '#1e1e1e',
           color: "white",
           menuBg: '#000000aa',
-          menuColor: 'white'
+          menuColor: 'white',
+          topBg: '#252526'
         }
         this.$appStore.set('theme', this.theme)
       }
@@ -97,7 +101,8 @@ export default {
           bg: 'white',
           color: "#333",
           menuBg: '#333333aa',
-          menuColor: 'white'
+          menuColor: 'white',
+          topBg: '#f3f3f3'
         }
         this.$appStore.set('theme', this.theme)
       }

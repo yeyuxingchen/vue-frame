@@ -2,14 +2,10 @@
  * 文件菜单
  */
 const files = {
-    label: '文件', value: 'file', children: [
+    label: '功能', value: 'func', children: [
         {
-            label: '新建',
-            value: 'file-create'
-        },
-        {
-            label: '打开',
-            value: 'file-open'
+            label: '打印预览',
+            value: 'printer-preview'
         }
     ]
 }
