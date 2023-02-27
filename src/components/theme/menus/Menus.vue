@@ -53,8 +53,26 @@ export default {
     openMenus() {
       this.$emit('open')
     },
+    menuFuncExist(data, list){
+      for(let i=0;i<data.length;i++) {
+        if (data[i].value !== list[0]) {
+          continue
+        }
+        if (data[i] && data[i].children) {
+          list.splice(0, 1)
+          return this.menuFuncExist(data[i].children, list)
+        } else if (data[i] && !data[i].children && data[i].func){
+          data[i].func()
+          return true
+        } else if (data[i] && !data[i].children) {
+          return false
+        }
+      }
+    },
     onCasClick(value) {
-      this.$emit('click', value[value.length - 1])
+      if (!this.menuFuncExist(this.list, value)) {
+        this.$emit('click', value[value.length - 1])
+      }
     }
   }
 }

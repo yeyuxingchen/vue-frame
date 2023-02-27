@@ -8,7 +8,7 @@
     </div>
     <div v-show="show" id="menu-card" class="menu-card" :style="{left: left, background: theme.menuBg}" v-click-outside.notouch="clickOutside">
       <div style="padding: 5px 0">
-        <div v-for="(item, index) in subList" :key="index" class="menu-card__item" @click="itemClick(item.value)" :style="{color: theme.menuColor}">
+        <div v-for="(item, index) in subList" :key="index" class="menu-card__item" @click="itemClick(item)" :style="{color: theme.menuColor}">
           {{ item.label }}
         </div>
       </div>
@@ -40,8 +40,12 @@ export default {
   mounted() {
   },
   methods: {
-    itemClick(value){
-      this.$emit('click', value)
+    itemClick(item){
+      if (item.func) {
+        item.func()
+      } else {
+        this.$emit('click', item.value)
+      }
       this.show = false
     },
     closeMenus(){

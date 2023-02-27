@@ -14,6 +14,16 @@ const routes = [
     name: 'file_create',
     component: () => import(/* webpackChunkName: "about" */ '../views/file/index.vue')
   },
+  {
+    path: '/tools-python-config-version',
+    name: 'tools-python-config-version',
+    component: () => import(/* webpackChunkName: "about" */ '../views/tools/manage/version/python.vue')
+  },
+  {
+    path: '/tools-node-config-version',
+    name: 'tools-node-config-version',
+    component: () => import(/* webpackChunkName: "about" */ '../views/tools/manage/version/node.vue')
+  }
 ]
 
 const router = new VueRouter({
