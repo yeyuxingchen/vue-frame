@@ -62,8 +62,8 @@ export default {
         };
         // 监听Socket的关闭
         that.socket.onclose = function (event) {
-          console.log('Client notified socket has closed', event);
-        };
+          console.log('Client notified socket has closed', event)
+        }
       };
     },
     getPrinters() {
