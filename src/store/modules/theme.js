@@ -2,9 +2,10 @@ import {appStore} from "@/utils/appStore";
 
 const default_state = {
     bg: 'white',
-    color: "#333",
+    color: "#1e1e1e",
     menuBg: '#333333aa',
-    menuColor: 'white'
+    menuColor: 'white',
+    topBg: '#252526'
 }
 
 const theme = appStore.get('theme') || default_state
