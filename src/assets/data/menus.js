@@ -27,6 +27,39 @@ const utils = {
             func: () => {
                 router.push({name: 'tools-node-config-version'})
             }
+        },
+        {
+            label: '请求相关',
+            value: 'tools-request-utils-about',
+            func: () => {
+                router.push({name: 'tools-request-utils-about'})
+            }
+        }
+    ]
+}
+
+const develop = {
+    label: '开发', value: 'develop', children: [
+        {
+            label: '飞鸽内网穿透',
+            value: 'develop-feige-chuantou',
+            func: () => {
+                router.push({name: 'develop-feige-chuantou'})
+            }
+        },
+        {
+            label: '小米球穿透',
+            value: 'develop-xiaomiqiu-chuantou',
+            func: () => {
+                router.push({name: 'develop-xiaomiqiu-chuantou'})
+            }
+        },
+        {
+            label: 'NATAPP穿透',
+            value: 'develop-natapp-chuantou',
+            func: () => {
+                router.push({name: 'develop-natapp-chuantou'})
+            }
         }
     ]
 }
@@ -68,6 +101,7 @@ const help = {
 export const menusDate = [
     files,
     utils,
+    develop,
     themes,
     help
 ]

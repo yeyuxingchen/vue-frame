@@ -80,7 +80,7 @@ export default {
     left: 50px;
     width: 150px;
     transition: .2s;
-    z-index: 2;
+    z-index: 2000;
 
     &__item{
       height: 25px;

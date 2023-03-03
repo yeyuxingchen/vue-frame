@@ -23,6 +23,26 @@ const routes = [
     path: '/tools-node-config-version',
     name: 'tools-node-config-version',
     component: () => import(/* webpackChunkName: "about" */ '../views/tools/manage/version/node.vue')
+  },
+  {
+    path: '/tools-request-utils-about',
+    name: 'tools-request-utils-about',
+    component: () => import(/* webpackChunkName: "about" */ '../views/tools/request/Utils.vue')
+  },
+  {
+    path: '/develop-feige-chuantou',
+    name: 'develop-feige-chuantou',
+    component: () => import(/* webpackChunkName: "about" */ '../views/develop/feige/index.vue')
+  },
+  {
+    path: '/develop-feige-chuantou',
+    name: 'develop-xiaomiqiu-chuantou',
+    component: () => import(/* webpackChunkName: "about" */ '../views/develop/xiaomiqio/index.vue')
+  },
+  {
+    path: '/develop-natapp-chuantou',
+    name: 'develop-natapp-chuantou',
+    component: () => import(/* webpackChunkName: "about" */ '../views/develop/natapp/index.vue')
   }
 ]
 

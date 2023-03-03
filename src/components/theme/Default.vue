@@ -17,7 +17,9 @@
       </div>
     </div>
     <component :is="current" v-if="current != null" :show="dialogShow" @close="dialogShow = false"/>
-    <slot></slot>
+    <div style="width: calc(100vw - 5px);height: calc(100vh - 60px);overflow: auto">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
