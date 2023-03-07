@@ -30,6 +30,7 @@ export default {
     this.$router.push('/')
   },
   created() {
+    document.title = '工具箱'
   }
 }
 

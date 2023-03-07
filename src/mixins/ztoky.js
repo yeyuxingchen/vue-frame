@@ -46,11 +46,17 @@ const mixin = {
             if (this.socket) {
                 return
             }
+
             const that = this
             that.socket = new WebSocket('wss://localhost:13529');
 
             // 打开Socket
             that.socket.onopen = this.onOpen
+
+            // 异常
+            that.socket.onclose = function (err) {
+                console.log(err)
+            }
         },
         getPrinters() {
             const request = {};

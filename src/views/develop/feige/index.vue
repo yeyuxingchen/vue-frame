@@ -24,9 +24,9 @@
     <el-alert v-if="exist" title="服务正在运行..." type="success" style="margin-top: 0;width: 150px;margin-bottom: 10px" :closable="false" />
 
     <div class="out-console" v-if="data.feige.cmdResult.length > 0">
-      <span :style="{color: typeof item === 'string' ? '' : item.color}" v-for="(item, index) in data.feige.cmdResult" :key="index">
+      <div :style="{color: typeof item === 'string' ? '' : item.color}" v-for="(item, index) in data.feige.cmdResult" :key="index">
         {{ typeof item === 'string' ? item : item.text }}
-      </span>
+      </div>
     </div>
   </div>
 </template>
@@ -175,7 +175,7 @@ export default {
   max-height: calc(100vh - 350px);
   overflow: auto;
 
-  span{
+  div{
     width: 100%;
     overflow: hidden;
     text-align: left;

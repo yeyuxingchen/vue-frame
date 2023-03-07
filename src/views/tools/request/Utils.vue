@@ -4,22 +4,22 @@
       <el-tab-pane label="表单转JSON" name="first">
         <div style="display: flex;flex-direction: row;align-items: center;justify-content: space-between">
           <div style="width: 45vw">
-            <el-input v-model="vin" type="textarea" :rows="20" />
+            <el-input v-model="vin" type="textarea" style="height: calc(100vh - 160px)" />
           </div>
           <span class="span-trans" @click="trans"> ▶ </span>
           <div style="width: 45vw">
-            <el-input v-model="vout" type="textarea" :rows="20" />
+            <el-input v-model="vout" type="textarea" style="height: calc(100vh - 160px)" />
           </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="HEADER转JSON" name="fourth">
         <div  style="display: flex;flex-direction: row;align-items: center;justify-content: space-between">
           <div style="width: 45vw">
-            <el-input v-model="hin" type="textarea" :rows="20" />
+            <el-input v-model="hin" type="textarea" style="height: calc(100vh - 160px)" />
           </div>
           <span class="span-trans" @click="transH"> ▶ </span>
           <div style="width: 45vw">
-            <el-input v-model="hout" type="textarea" :rows="20" />
+            <el-input v-model="hout" type="textarea" style="height: calc(100vh - 160px)" />
           </div>
         </div>
       </el-tab-pane>
@@ -97,5 +97,7 @@ export default {
 }
 ::v-deep .el-textarea__inner{
   font-size: 12px;
+  height: 100%;
 }
+
 </style>

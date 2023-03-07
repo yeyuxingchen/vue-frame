@@ -1,13 +1,16 @@
 <template>
   <div class="default" :style="{background: theme.bg}">
     <div class="default-menu" :style="{background: theme.topBg}">
+      <div style="width: 30px;height: 30px;display: flex;align-items: center;justify-content: center">
+        <img src="../../assets/icon/icon.png" style="width: 20px;height: 20px;background-size: 100% 100%" />
+      </div>
       <div class="menus" :style="{width: menusWidth}">
         <open-menus v-show="system.menuIsOpen" :list="menusData" @close="onCloseMenus" style="transition: .5s" @click="onMenuItemClick"/>
         <menus @open="onOpenMenus" @click="onMenuItemClick" v-show="!system.menuIsOpen" style="margin-left: 10px;line-height: 30px;transition: .5s" width="60px" :list="menusData">
             <span style="font-size: 13px;font-weight: bold" :style="{color: theme.color}">菜单</span>
         </menus>
       </div>
-      <div class="drags" :style="{width: `calc(100% - ${operateWidth} - ${menusWidth})`, '-webkit-app-region': system.draggable ? 'drag' : ''}">
+      <div class="drags" :style="{width: `calc(100% - ${operateWidth} - ${menusWidth} - 30px)`, '-webkit-app-region': system.draggable ? 'drag' : ''}">
         <el-progress v-if="system.percentage > 0" class="process" :percentage="system.percentage" color="#08b127"/>
       </div>
       <div class="operate" :style="{width: operateWidth}">

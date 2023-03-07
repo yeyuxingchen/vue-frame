@@ -1,12 +1,12 @@
 'use strict'
 
 import Store from "electron-store";
-import store from "@/store";
 import {app, protocol, BrowserWindow, ipcMain} from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { initDown } from '@/utils/download'
+import path from "path";
 
 Store.initRenderer()
 
@@ -33,6 +33,8 @@ async function createWindow() {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
     }
   })
+
+  win.setIcon(path.join(__dirname, '../public/icon/icon.png'))
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -113,4 +115,70 @@ ipcMain.on('windows-middle', ()=>{
   } else {
     win.maximize()
   }
+})
+
+
+ipcMain.on('login', (event) => {
+  const loginWin = new BrowserWindow({
+    width: 800,
+    height: 800,
+    resizable: false,
+    minimizable: false,
+    maximizable: false,
+    webPreferences: {
+      devTools: false
+    }
+  })
+
+  loginWin.setMenu(null)
+  loginWin.loadURL('https://natapp.cn/login')
+  const content = loginWin.webContents
+  content.session.clearStorageData().then(() => {})
+  const cookies = []
+
+  content.on('did-stop-loading', () => {
+    if (content.getURL() === 'https://natapp.cn/login') {
+      content.executeJavaScript(`document.getElementById('login').value = '15755574393';document.getElementById('password').value = '19980727lyh';document.getElementsByClassName('checkbox')[0].getElementsByTagName('input')[0].value = 'on';document.getElementsByClassName('btn btn-success btn-lg btn-block')[0].click()`, false, (e,r,b) => {
+        console.log(e,r,b)
+      })
+    }
+    if (content.getURL() === 'https://natapp.cn/member/dashborad') {
+      const cookies_list = []
+      content.session.cookies.get({url: 'https://natapp.cn'}).then(cookies => {
+        cookies.forEach(item => {
+          cookies_list.push(item.name + '=' + item.value)
+        })
+        console.log(cookies_list.join(';'))
+        event.sender.send('afterLogin', cookies_list)
+        loginWin.destroy()
+      })
+    }
+  })
+})
+
+ipcMain.on('changeAddress', (event, cookies_my) => {
+  const loginWin = new BrowserWindow({
+    width: 800,
+    height: 800,
+    resizable: false,
+    minimizable: false,
+    maximizable: false,
+    webPreferences: {
+      devTools: false
+    }
+  })
+
+  loginWin.setMenu(null)
+  console.log('cookie: ' + cookies_my + '\n')
+  loginWin.loadURL('https://natapp.cn/tunnel/edit/x16wonqzpl', {
+    extraHeaders: 'cookie: ' + cookies_my + '\n'
+  })
+  const content = loginWin.webContents
+  content.session.clearStorageData().then(() => {})
+
+  content.on('did-stop-loading', () => {
+    // content.executeJavaScript(`document.getElementById('login').value = '15755574393';document.getElementById('password').value = '19980727lyh';document.getElementsByClassName('checkbox')[0].getElementsByTagName('input')[0].value = 'on';document.getElementsByClassName('btn btn-success btn-lg btn-block')[0].click()`, false, (e,r,b) => {
+    //   console.log(e,r,b)
+    // })
+  })
 })

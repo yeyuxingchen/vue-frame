@@ -101,8 +101,12 @@ export default {
         this.$message.warning('服务正在运行！')
         return
       }
+      const that = this
       const exec = require('child_process').exec
       this.workerProcess = exec(`${this.hideCmd ? '' : 'start' }.\\exec\\xiaomiqiu.exe -config .\\exec\\xiaomiqiu.conf  start-all`)
+      this.workerProcess.stderr.on('close', () => {
+        that.exist = false
+      })
       this.serverExist().then(exist => {
         if (exist) {
           this.exist = true

@@ -4,7 +4,6 @@
       <div class="flex-column" style="width: calc(100% - 230px)">
         <el-input size="mini" v-model="cookie" style="margin-bottom: 7px"/>
         <el-input placeholder="本地映射地址" size="mini" v-model="address" style="margin-bottom: 7px"/>
-        <el-input readonly placeholder="网址" size="mini" v-model="webAddress" />
       </div>
       <div style="width: 210px;" class="flex-column">
         <div class="flex-row" style="margin-bottom: 7px">
@@ -13,7 +12,7 @@
         </div>
         <div class="flex-row" style="margin-bottom: 7px">
           <el-button @click="editAddress" type="danger" size="small" style="width: 100px">修改地址</el-button>
-          <el-button :loading="openWebAddressLoading" @click="openWebAddress" type="info" size="small" style="width: 100px">打开网站</el-button>
+          <el-button :loading="openWebAddressLoading" @click="login" type="info" size="small" style="width: 100px">登录</el-button>
         </div>
         <div class="flex-row" style="align-items: center">
           <el-button @click="closeServer" type="warning" size="small" style="width: 100px">关闭穿透</el-button>
@@ -34,8 +33,9 @@
 
 <script>
 import {NATCrawler} from "@/utils/crawlar/natapp";
-import {natRequest} from "@/utils/crawlar/natRequest";
+import {natLogin, natRequest} from "@/utils/crawlar/natRequest";
 import CheerioAPI from 'cheerio'
+import {ipcRenderer} from "electron";
 
 export default {
   name: "index",
@@ -45,19 +45,41 @@ export default {
     cookie: '',
     tableData: [],
     address: '',
+    beforeAddress: '',
     webAddress: '',
     openWebAddressLoading: false,
     hideCmd: true,
     exist: false,
   }),
   mounted() {
-    this.cookie = NATCrawler.headers.cookie
-    this.getMyList()
+    ipcRenderer.on('afterLogin', async (event, result) => {
+      this.afterLogin(result)
+    })
+    if (!NATCrawler.headers.cookie) {
+      this.login()
+    }
+    this.cookie = this.$store.state.nwct.natapp.cookie
+    this.getMyList().then(res => {
+      if (!res) {
+          this.login()
+      }
+    })
     this.serverExist().then(exist => {
       this.exist = exist
     })
   },
   methods: {
+    afterLogin(result) {
+      console.log(result)
+      this.cookie = result
+      NATCrawler.headers.cookie = this.cookie
+      this.$store.state.nwct.natapp.cookie = result
+      this.$appStore.set('nwct.natapp.cookie', result)
+      this.getMyList()
+    },
+    login(){
+      ipcRenderer.send('login')
+    },
     serverExist(){
       return new Promise(resolve => {
         const ex = require('child_process').exec('tasklist | findstr "natapp.exe"')
@@ -103,6 +125,10 @@ export default {
       }
       const exec = require('child_process').exec
       this.workerProcess = exec(`${'start '}.\\exec\\natapp.exe --authtoken=dfcdea0af3d9c31c`)
+      this.workerProcess.on('close', code => {
+        this.exist = false
+        this.$message.warning('已关闭穿透服务')
+      })
       this.serverExist().then(exist => {
         if (exist) {
           this.exist = true
@@ -113,14 +139,19 @@ export default {
       })
     },
     getMyList(){
-      natRequest(NATCrawler.editAddress, '', this.cookie, 'get').then(res => {
-        const $ = CheerioAPI.load(res)
-        const buy_form = $('#buy_form').find('input')
-        this.address = buy_form.get(3).attribs.value + ':' + buy_form.get(4).attribs.value
-        console.log(buy_form)
-        // this.tableData = res.rows
-        // this.address = this.tableData[0].localAddress
-        // this.webAddress = 'http://' + this.tableData[0].subdomain + '.ngrok.xiaomiqiu123.top'
+      const that = this
+      return new Promise(resolve => {
+        natRequest(NATCrawler.editAddress, '', that.cookie, 'get').then(res => {
+          const $ = CheerioAPI.load(res)
+          if ($('#container').text().indexOf('登录') > 0) {
+            resolve(false)
+          } else {
+            const buy_form = $('#buy_form').find('input')
+            that.address = buy_form.get(3).attribs.value + ':' + buy_form.get(4).attribs.value
+            that.beforeAddress = that.address
+            resolve(true)
+          }
+        })
       })
     },
     editAddress(){
@@ -128,16 +159,12 @@ export default {
         this.$message.warning('请输入地址！')
         return
       }
-      if (this.address === this.tableData[0].localAddress) {
+      if (this.address === this.beforeAddress) {
         this.$message.warning('地址未改变！')
         return
       }
-      NATCrawler.editAddressBody.localAddress = this.address
-      natRequest(NATCrawler.editAddress, NATCrawler.editAddressBody, this.cookie).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg)
-        }
-      })
+
+      ipcRenderer.send('changeAddress', this.cookie)
     }
   }
 }
